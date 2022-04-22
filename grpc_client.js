@@ -11,8 +11,9 @@ const options = {
     oneofs: true,
 };
   
-const packageDefinition = protoLoader.loadSync(PROTO_PATH, options);
+/*const packageDefinition = protoLoader.loadSync(PROTO_PATH, options);
 const ItemService = grpc.loadPackageDefinition(packageDefinition).ItemService;
 const client = new ItemService("localhost:50001", grpc.credentials.createInsecure());
 
 module.exports = client;
+*/
