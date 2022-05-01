@@ -1,19 +1,30 @@
 var express = require("express");
+
+
 var { Client } = require('pg');
-const client = new Client({
+/*const client = new Client({
     user: 'postgres',
-    host: 'localhost',
+    host: 'database',
     database: 'postgres',
-    password: '',
     port: 5432,
-  })
+})*/
+
+
+var Redis = require("redis");
+(async () => {
+    const redis = Redis.createClient({host:'redis-server', port: 6379});
+    
+    redis.on('error', (err) => console.log('Redis Client Error', err));
+
+    await redis.connect();
+})();
 //var grpc = require("./grpc_client");
 
 var app = express();
 const port = 3000;
 
 //app.use()
-client.connect();
+//client.connect();
 
 
 app.get('/', async(req,res) => {

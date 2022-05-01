@@ -1,29 +1,36 @@
 version: '3.8'
 
 services:
-  redis:
-    container_name: redis
-    image: bitnami/redis:6.2.6
-    environment:
-      - 'ALLOW_EMPTY_PASSWORD=yes'
-  database:
-    container_name: database
-    image: bitnami/postgresql:11.15.0
-    restart: always
-    environment:
-      - 'ALLOW_EMPTY_PASSWORD=yes'
-
-    ports:
-      - "5432:5432"
-    volumes:
-        - ./database/:/docker-entrypoint-initdb.d
-        - ./data/postgres/pgdata:/var/lib/postgresql/data/pgdata
   server:
     container_name: server
     build: . 
     ports: 
      - "3000:3000"
-        
+    networks:
+      - redis
+  redis-server:  
+    container_name: redis
+    image: bitnami/redis:6.2.6
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6379:6379"
+    networks:
+      - redis
+  database:
+    container_name: database
+    image: bitnami/postgresql:11.15.0
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "5432:5432"
+    volumes:
+        - ./database/:/docker-entrypoint-initdb.d
+        - ./data/postgres/pgdata:/var/lib/postgresql/data/pgdata 
+networks:
+  redis:
+    driver: bridge        
 
 
     
