@@ -18,8 +18,7 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
       - "6379:6379"
-    volumes:
-      - ./opt/overrides.conf:/opt/bitnami/redis/mounted-etc/overrides.conf
+
     networks:
       - redis
   database:
