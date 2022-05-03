@@ -1,0 +1,13 @@
+FROM node:12
+
+WORKDIR /tarea1
+
+COPY package*.json ./
+
+RUN  npm install
+
+COPY index.js ./
+
+COPY setup.proto ./
+
+CMD [ "node", "index.js" ]
