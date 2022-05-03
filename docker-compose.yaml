@@ -1,9 +1,10 @@
 version: '3.8'
 
 services:
-  nodejs:
-    container_name: server
-    build: . 
+
+  client:
+    container_name: client
+    build: ./grpcClient
     ports: 
      - "3000:3000"
     networks:
@@ -11,6 +12,17 @@ services:
     depends_on:
       - database
       - redis-server
+  
+  server:
+    container_name: server
+    build: ./grpcServer
+    ports:
+      - "3001:3001"
+    networks:
+      - redis
+    depends_on:
+      - database
+
   redis-server:  
     container_name: redis
     image: bitnami/redis:6.2.6
@@ -18,9 +30,12 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
       - "6379:6379"
-
+    volumes:
+      - ./redis/overrides.conf:/opt/bitnami/redis/mounted-etc/overrides.conf
     networks:
       - redis
+
+
   database:
     container_name: database
     image: bitnami/postgresql:11.15.0
@@ -37,6 +52,7 @@ services:
       - ./data/postgres/pgdata:/var/lib/postgresql/data/pgdata 
     networks:
       - redis
+
 networks:
   redis:
     driver: bridge        
