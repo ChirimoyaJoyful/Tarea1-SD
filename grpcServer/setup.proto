@@ -10,14 +10,17 @@ message Element {
     int32 count = 5;
 }
 
+message elementList {
+    repeated Element listEl = 1;
+}
+
 
 message searchTerm {
     string term = 1;
 }
 
 service SearchItem {
-    rpc getSearch(searchTerm) returns (empty);
-    rpc sendResult(Element) returns (empty);
+    rpc getSearch(searchTerm) returns (elementList) {}
 }
 
 message empty {}

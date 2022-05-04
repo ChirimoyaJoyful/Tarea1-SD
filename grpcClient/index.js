@@ -35,13 +35,30 @@ var client = new searchitem.SearchItem("server:50051", grpc.credentials.createIn
 // Objeto de prueba
 var item2 = {term: "itemNro2" }
 
-client.getSearch(item2, function(err, blank) {
-    if (err) {
-        console.log('Error al enviar rpc');
-    } else {
-        console.log(blank);
-    }    
-});
+function searchGet(term) {
+    console.log("searchGet :)")
+    client.getSearch(term, (err, list) =>  {
+        if (err) {
+            console.log('Error al enviar/recibir rpc');
+        } else {
+            console.log("------------");
+            console.log("dentro del get");
+            // console.log(list.request);
+            console.log(list.request);
+            console.log("------------");
+        }    
+    });
+
+    
+}
+
+// client.getSearch(item2, function(err, blank) {
+//     if (err) {
+//         console.log('Error al enviar rpc');
+//     } else {
+//         console.log(blank);
+//     }    
+// });
 ///////////////////////////End gRPC
 
 
@@ -85,19 +102,20 @@ app.use(express.json());
 //     })
 // });
 
-// app.get('/inventory/search', async(req, res) =>{
-//     var q = req.query.q;
-//     var reply = await redisClient.get(q);
-//     if(reply){
-//         console.log("Cache");
-//     }else{
-//         var items = await pool.query("SELECT * FROM items WHERE Name LIKE '%' || $1 || '%'", [q]);
-//         var cosa = JSON.stringify(items.rows)
-//         res.send(cosa);
-//         console.log("Database");
-//         await redisClient.setEx(q,600,cosa);
-//     }
-// });
+app.get('/inventory/search', async(req, res) =>{
+    var term = req.query;
+    var reply = await redisClient.get(term.term);
+    if(reply){
+        console.log("Cache");
+    }else{
+        searchGet(term);
+        // var items = await pool.query("SELECT * FROM items WHERE Name LIKE '%' || $1 || '%'", [term.term]);
+        // var cosa = JSON.stringify(items.rows)
+        // res.send(cosa);
+        // console.log("Database");
+        await redisClient.setEx(term.term,600,term);
+    }
+});
 
 //"SELECT * FROM items WHERE Name LIKE '%' || $1 || '%'", [q]
 
